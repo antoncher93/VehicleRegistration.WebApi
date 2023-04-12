@@ -9,6 +9,8 @@ public class Model
     [JsonIgnore]
     public Brand Brand { get; set; } 
     
+    public int BrandId { get; set; }
+    
     public string ModelName { get; set; }
 
     public List<Body> Bodies { get; set; } = new List<Body>();

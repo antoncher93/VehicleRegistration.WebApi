@@ -4,7 +4,7 @@ using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Infrastructure;
 
-internal class BrandRepository : IBrandRepository
+public class BrandRepository : IBrandRepository
 {
     private readonly ApplicationDbContext _db;
 

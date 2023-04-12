@@ -24,4 +24,6 @@ public interface IModelRepository
 
     Task UpdateAsync(
         Types.Model model);
+
+    Task<List<Model>> GetModelsOfBrandAsync(int brandId);
 }

@@ -31,6 +31,7 @@ public class EngineController : ControllerBase
         return this.Ok(engine);
     }
 
+    [HttpPost]
     public async Task<IActionResult> PostAsync(
         [FromBody] AddEngineRequestBody requestBody)
     {

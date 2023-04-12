@@ -64,4 +64,12 @@ public class ModelRepository : IModelRepository
         _db.Models.Update(model);
         await _db.SaveChangesAsync();
     }
+
+    public Task<List<Model>> GetModelsOfBrandAsync(
+        int brandId)
+    {
+        return _db.Models
+            .Where(model => model.BrandId == brandId)
+            .ToListAsync();
+    }
 }

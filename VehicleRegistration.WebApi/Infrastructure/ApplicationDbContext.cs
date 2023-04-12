@@ -5,11 +5,13 @@ namespace VehicleRegistration.WebApi.Infrastructure;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options) 
+        : base(options)
     {
         this.Database.EnsureCreated();
 
-        this.AddInitialData();
+        //this.AddInitialData();
     }
 
     private void AddInitialData()
@@ -93,40 +95,41 @@ public class ApplicationDbContext : DbContext
 
         modelBuilder.Entity<Brand>(entity =>
         {
-            entity.ToTable("Brands");
+            entity.ToTable("Brand");
             entity.HasKey(brand => brand.Id);
-            entity.HasMany(brand => brand.Models)
-                .WithOne(model => model.Brand);
-            entity.Property(brand => brand.Name).IsRequired();
+            entity
+                .HasMany(brand => brand.Models)
+                .WithOne(model => model.Brand)
+                .HasForeignKey(model => model.BrandId);
         });
 
-        modelBuilder.Entity<Types.Model>(entity =>
-        {
-            entity.ToTable("Models");
-            entity.HasKey(model => model.Id);
-            entity.Property(model => model.ModelName).IsRequired();
-            entity.HasOne<Brand>(model => model.Brand)
-                .WithMany(brand => brand.Models)
-                .HasForeignKey("BrandId")
-                .IsRequired(true);
-
-            entity.HasMany(model => model.Bodies)
-                .WithMany(body => body.Models)
-                .UsingEntity(e => e.ToTable("ModelBody"));
-        });
-
-        modelBuilder.Entity<Engine>(entity =>
+        /*
+        modelBuilder.Entity<Model>(entity =>
         {
             entity
-                .HasMany(engine => engine.Models)
-                .WithMany(model => model.Engines)
-                .UsingEntity(e => e.ToTable("ModelEngine"));
+                .ToTable("Models")
+                .HasMany(model => model.Engines)
+                .WithMany(engine => engine.Models)
+                .UsingEntity(
+                    builder => builder.ToTable("ModelEngine"));
         });
+        
+        
 
         modelBuilder.Entity<Body>(entity =>
         {
-            entity.HasIndex(body => body.Name)
+            entity
+                .HasIndex(body => body.Name)
                 .IsUnique(true);
+
+            entity
+                .HasMany(body => body.Models)
+                .WithMany(model => model.Bodies)
+                .UsingEntity(
+                    builder => builder.ToTable("ModelBody"));
         });
+        */
     }
+    
+    
 }

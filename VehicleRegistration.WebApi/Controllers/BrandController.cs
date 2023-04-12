@@ -6,15 +6,15 @@ using VehicleRegistration.WebApi.Types;
 namespace VehicleRegistration.WebApi.Controllers;
 
 [ApiController]
-[Route("api/vehicle")]
-public class VehicleController : ControllerBase
+[Route("api/brand")]
+public class BrandController : ControllerBase
 {
     private readonly IBrandRepository _brands;
     private readonly IModelRepository _models;
     private readonly IEngineRepository _engines;
     private readonly IBodyRepository _bodies;
 
-    public VehicleController(
+    public BrandController(
         IBrandRepository brands,
         IModelRepository models,
         IEngineRepository engines,
@@ -26,7 +26,7 @@ public class VehicleController : ControllerBase
         _bodies = bodies;
     }
 
-    [HttpGet("brands")]
+    [HttpGet]
     public async Task<IActionResult> GetBrandsAsync()
     {
         var resultList = await _brands.GetBrandsNamesAsync();
@@ -55,37 +55,6 @@ public class VehicleController : ControllerBase
         await _brands.AddAsync(brand);
 
         return this.Ok(brand);
-    }
-    
-    [HttpGet("{brandName}")]
-    public async Task<IActionResult> GetModelsAsync(
-        string brandName)
-    {
-        var brand = await _brands.GetBrandAsync(brandName);
-
-        if (brand is null)
-        {
-            return this.NotFound();
-        }
-
-        return this.Ok(brand);
-    }
-    
-    [HttpGet("{brandName}/{modelName}")]
-    public async Task<IActionResult> GetModelDetailsAsync(
-        string brandName,
-        string modelName)
-    {
-        var model = await _models.GetByNameAsync(
-            brandName: brandName,
-            modelName: modelName);
-
-        if (model is null)
-        {
-            return this.NotFound();
-        }
-
-        return this.Ok(model);
     }
 
     [HttpPost("{brandName}")]
