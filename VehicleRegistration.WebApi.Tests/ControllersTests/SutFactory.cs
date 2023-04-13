@@ -26,10 +26,14 @@ public static class SutFactory
         var modelController = new ModelController(
             modelRepository: models,
             brandRepository: brands);
+
+        var engineController = new EngineController(
+            engines: engines);
         
         return new Sut(
             db: db,
             brandController: brandController,
-            modelController: modelController);
+            modelController: modelController,
+            engineController: engineController);
     }
 }

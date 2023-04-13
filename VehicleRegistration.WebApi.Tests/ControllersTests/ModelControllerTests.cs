@@ -12,7 +12,7 @@ public class ModelControllerTests
         using var sut = SutFactory.Create();
         var brand = EntityValues.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOfValues(() => EntityValues.RandomModel(brand.Id));
+        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
         sut.SetupModels(models);
         var result = await sut.ModelController.GetModelsAsync(brand.Name);
         result
@@ -39,7 +39,7 @@ public class ModelControllerTests
         using var sut = SutFactory.Create();
         var brand = EntityValues.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOfValues(() => EntityValues.RandomModel(brand.Id));
+        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
         sut.SetupModels(models);
         var result = await sut.ModelController.GetModelDetailsAsync(
             brandName: brand.Name,
@@ -55,7 +55,7 @@ public class ModelControllerTests
         using var sut = SutFactory.Create();
         var brand = EntityValues.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOfValues(() => EntityValues.RandomModel(brand.Id));
+        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
         sut.SetupModels(models);
 
         var randomModel = models
