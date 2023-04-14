@@ -25,7 +25,9 @@ public static class SutFactory
 
         var modelController = new ModelController(
             modelRepository: models,
-            brandRepository: brands);
+            brandRepository: brands,
+            bodyRepository: bodies,
+            engineRepository: engines);
 
         var engineController = new EngineController(
             engines: engines);
@@ -34,6 +36,7 @@ public static class SutFactory
             db: db,
             brandController: brandController,
             modelController: modelController,
-            engineController: engineController);
+            engineController: engineController,
+            bodyController: new BodyController(bodies));
     }
 }

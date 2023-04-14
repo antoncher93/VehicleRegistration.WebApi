@@ -14,7 +14,7 @@ public class BrandControllerTests
         // arrange
         using var sut = SutFactory.Create();
 
-        var brand = EntityValues.RandomBrand();
+        var brand = Create.RandomBrand();
         
         sut.SetupBrand(brand);
 
@@ -63,7 +63,7 @@ public class BrandControllerTests
     public async Task PostBrandReturnsBadRequestForBrandAlreadyExists()
     {
         using var sut = SutFactory.Create();
-        var existingBrand = EntityValues.RandomBrand();
+        var existingBrand = Create.RandomBrand();
         sut.SetupBrand(existingBrand);
         var result = await sut.BrandController.PostAsync(
             requestBody: new AddBrandRequestBody() { Name = existingBrand.Name });

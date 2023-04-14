@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using VehicleRegistration.WebApi.RequestModels;
+using VehicleRegistration.WebApi.Types;
 using Xunit;
 
 namespace VehicleRegistration.WebApi.Tests.ControllersTests;
@@ -10,9 +12,9 @@ public class ModelControllerTests
     public async Task ReturnsExistingModels()
     {
         using var sut = SutFactory.Create();
-        var brand = EntityValues.RandomBrand();
+        var brand = Create.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
+        var models = Values.ListOf(() => Create.RandomModel(brand));
         sut.SetupModels(models);
         var result = await sut.ModelController.GetModelsAsync(brand.Name);
         result
@@ -37,9 +39,9 @@ public class ModelControllerTests
     public async Task GetModelDetailsReturnsNotFoundIfDoesNotFoundModel()
     {
         using var sut = SutFactory.Create();
-        var brand = EntityValues.RandomBrand();
+        var brand = Create.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
+        var models = Values.ListOf(() => Create.RandomModel(brand));
         sut.SetupModels(models);
         var result = await sut.ModelController.GetModelDetailsAsync(
             brandName: brand.Name,
@@ -53,9 +55,9 @@ public class ModelControllerTests
     public async Task GetModelDetailsReturnsModel()
     {
         using var sut = SutFactory.Create();
-        var brand = EntityValues.RandomBrand();
+        var brand = Create.RandomBrand();
         sut.SetupBrand(brand);
-        var models = Values.ListOf(() => EntityValues.RandomModel(brand));
+        var models = Values.ListOf(() => Create.RandomModel(brand));
         sut.SetupModels(models);
 
         var randomModel = models
@@ -70,5 +72,45 @@ public class ModelControllerTests
             .Value
             .Should()
             .BeEquivalentTo(randomModel);
+    }
+
+    [Fact]
+    public async Task PostMethodReturnsModel()
+    {
+        // arrange
+        using var sut = SutFactory.Create();
+        var brand = Create.RandomBrand();
+        sut.SetupBrand(brand);
+
+        var bodies = Values.ListOf(Create.RandomBody);
+        sut.SetupBodies(bodies);
+        
+        var model = Create.RandomModel(brand);
+        model.Bodies = bodies;
+
+        // action
+        var result = await sut.ModelController.PostAsync(
+            request: new AddModelRequest()
+            {
+                BrandId = brand.Id,
+                Name = model.ModelName,
+                BodyIds = bodies.Select(body => body.Id).ToList(),
+            });
+
+        // assert
+        result
+            .As<OkObjectResult>()
+            .Value
+            .As<Model>()
+            .Should()
+            .BeEquivalentTo(
+                expectation: model,
+                config: options => options.Excluding(m => m.Id));
+
+        var actualBodies = await sut.GetAllBodiesAsync();
+
+        actualBodies
+            .Should()
+            .BeEquivalentTo(bodies);
     }
 }

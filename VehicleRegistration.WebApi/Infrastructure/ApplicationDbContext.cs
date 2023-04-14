@@ -103,6 +103,17 @@ public class ApplicationDbContext : DbContext
                 .HasForeignKey(model => model.BrandId);
         });
 
+        modelBuilder.Entity<Model>(entity =>
+        {
+            entity
+                .HasMany(model => model.Bodies)
+                .WithMany(body => body.Models)
+                .UsingEntity(e =>
+                {
+                    e.ToTable("ModelBodies");
+                });
+        });
+
         /*
         modelBuilder.Entity<Model>(entity =>
         {

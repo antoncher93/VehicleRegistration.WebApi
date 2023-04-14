@@ -60,7 +60,7 @@ public class BrandController : ControllerBase
     [HttpPost("{brandName}")]
     public async Task<IActionResult> PostModelsAsync(
         string brandName,
-        [FromBody] AddModelRequestBody requestBody)
+        [FromBody] AddModelRequest request)
     {
         var brand = await _brands.GetBrandAsync(brandName);
 
@@ -71,18 +71,18 @@ public class BrandController : ControllerBase
 
         var model = new Types.Model()
         {
-            ModelName = requestBody.Name,
+            ModelName = request.Name,
             Brand = brand,
         };
 
-        if (requestBody.EngineIds != null)
+        if (request.EngineIds != null)
         {
-            model.Engines = await _engines.GetEnginesAsync(requestBody.EngineIds);
+            model.Engines = await _engines.GetEnginesAsync(request.EngineIds);
         }
         
-        if (requestBody.BodyIds != null)
+        if (request.BodyIds != null)
         {
-            var bodies = await _bodies.GetBodiesAsync(requestBody.BodyIds);
+            var bodies = await _bodies.GetBodiesAsync(request.BodyIds);
             model.Bodies =  bodies;
         }
 

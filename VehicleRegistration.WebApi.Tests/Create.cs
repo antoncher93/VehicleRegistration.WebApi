@@ -3,7 +3,7 @@ using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Tests;
 
-public static class EntityValues
+public static class Create
 {
     public static Brand RandomBrand()
     {
@@ -16,9 +16,11 @@ public static class EntityValues
     public static Model RandomModel(
         Brand? brand = default)
     {
+        brand ??= RandomBrand();
         return new Model()
         {
-            Brand = brand ?? RandomBrand(),
+            Brand = brand,
+            BrandId = brand.Id,
             ModelName = Values.RandomString(),
         };
     }
@@ -33,9 +35,17 @@ public static class EntityValues
         return new Engine()
         {
             Type = randomEngineType,
-            Models = models ?? EntityValues.RandomModel().AsList(),
+            Models = models ?? Create.RandomModel().AsList(),
             HorsePower = Values.RandomDouble(0.5, 9999.9),
             Volume = randomEngineType == EngineType.Electrical ? null : Values.RandomDouble(0.1, 99.9)
+        };
+    }
+
+    public static Body RandomBody()
+    {
+        return new Body()
+        {
+            Name = Values.RandomString(),
         };
     }
 }

@@ -14,7 +14,7 @@ public class EngineControllerTests
     [Fact]
     public async Task ReturnsExistingEngine()
     {
-        var engine = EntityValues.RandomEngine();
+        var engine = Create.RandomEngine();
         using var sut = SutFactory.Create();
         sut.SetupEngines(engine.AsList());
 

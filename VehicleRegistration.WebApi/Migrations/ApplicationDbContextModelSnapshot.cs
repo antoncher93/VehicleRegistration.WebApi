@@ -34,7 +34,7 @@ namespace VehicleRegistration.WebApi.Migrations
 
                     b.HasIndex("ModelsId");
 
-                    b.ToTable("BodyModel");
+                    b.ToTable("ModelBodies", (string)null);
                 });
 
             modelBuilder.Entity("EngineModel", b =>

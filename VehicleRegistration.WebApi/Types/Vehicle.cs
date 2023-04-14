@@ -44,5 +44,9 @@ public class Vehicle
     
     public Engine Engine { get; set; }
     
+    public int EngineId { get; set; }
+    
     public Owner Owner { get; set; }
+    
+    public int OwnerId { get; set; }
 }

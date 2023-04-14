@@ -2,10 +2,13 @@
 
 namespace VehicleRegistration.WebApi.RequestModels;
 
-public class AddModelRequestBody
+public class AddModelRequest
 {
     [Required]
     public string Name { get; set; }
+    
+    [Required]
+    public int BrandId { get; set; }
     
     public List<int>? EngineIds { get; set; }
     
