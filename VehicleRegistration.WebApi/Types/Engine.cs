@@ -13,5 +13,5 @@ public class Engine
     public double? Volume { get; set; }
     
     [JsonIgnore]
-    public List<Model> Models { get; set; } = new List<Model>();
+    public List<Model>? Models { get; set; } = new List<Model>();
 }

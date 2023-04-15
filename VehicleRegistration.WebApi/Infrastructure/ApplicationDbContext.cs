@@ -88,6 +88,8 @@ public class ApplicationDbContext : DbContext
     public DbSet<Types.Model> Models { get; set; }
     public DbSet<Body> Bodies { get; set; }
     public DbSet<Engine> Engines { get; set; }
+    
+    public DbSet<Vehicle> Vehicles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,35 +114,20 @@ public class ApplicationDbContext : DbContext
                 {
                     e.ToTable("ModelBodies");
                 });
-        });
 
-        /*
-        modelBuilder.Entity<Model>(entity =>
-        {
             entity
-                .ToTable("Models")
                 .HasMany(model => model.Engines)
                 .WithMany(engine => engine.Models)
-                .UsingEntity(
-                    builder => builder.ToTable("ModelEngine"));
+                .UsingEntity(e => e.ToTable("ModelEngines"));
         });
-        
-        
 
-        modelBuilder.Entity<Body>(entity =>
+        modelBuilder.Entity<Vehicle>(entity =>
         {
+            entity.ToTable("Vehicle");
             entity
-                .HasIndex(body => body.Name)
-                .IsUnique(true);
-
-            entity
-                .HasMany(body => body.Models)
-                .WithMany(model => model.Bodies)
-                .UsingEntity(
-                    builder => builder.ToTable("ModelBody"));
+                .HasOne(v => v.Model)
+                .WithMany(model => model.Vehicles)
+                .HasForeignKey(vehicle => vehicle.ModelId);
         });
-        */
     }
-    
-    
 }

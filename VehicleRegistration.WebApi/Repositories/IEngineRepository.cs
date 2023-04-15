@@ -4,7 +4,7 @@ namespace VehicleRegistration.WebApi.Repositories;
 
 public interface IEngineRepository
 {
-    Task<Engine?> GetEngineAsync(int id);
+    Task<Engine?> FindByIdAsync(int id);
     
     Task<List<Engine>> GetEnginesAsync(IEnumerable<int> ids);
 

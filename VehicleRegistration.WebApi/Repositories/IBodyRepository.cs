@@ -9,4 +9,6 @@ public interface IBodyRepository
 
     Task AddBodyAsync(
         Body body);
+
+    Task<Body?> FindByIdAsync(int id);
 }

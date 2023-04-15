@@ -33,4 +33,10 @@ public class BodyRepository : IBodyRepository
         await _db.Bodies.AddAsync(body);
         await _db.SaveChangesAsync();
     }
+
+    public async Task<Body?> FindByIdAsync(int id)
+    {
+        return await _db.Bodies
+            .FirstOrDefaultAsync(body => body.Id == id);
+    }
 }

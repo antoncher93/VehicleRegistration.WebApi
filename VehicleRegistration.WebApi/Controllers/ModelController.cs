@@ -72,6 +72,12 @@ public class ModelController : ControllerBase
         
         model.Bodies = bodies;
 
+        if (request.EngineIds != null)
+        {
+            var engines = await _engineRepository.GetEnginesAsync(request.EngineIds);
+            model.Engines = engines;
+        }
+
         await _modelRepository.AddModelAsync(model);
 
         return this.Ok(model);

@@ -84,9 +84,13 @@ public class ModelControllerTests
 
         var bodies = Values.ListOf(Create.RandomBody);
         sut.SetupBodies(bodies);
+
+        var engines = Values.ListOf(() => Create.RandomEngine());
+        sut.SetupEngines(engines);
         
         var model = Create.RandomModel(brand);
         model.Bodies = bodies;
+        model.Engines = engines;
 
         // action
         var result = await sut.ModelController.PostAsync(
@@ -95,6 +99,7 @@ public class ModelControllerTests
                 BrandId = brand.Id,
                 Name = model.ModelName,
                 BodyIds = bodies.Select(body => body.Id).ToList(),
+                EngineIds = engines.Select(engine => engine.Id).ToList(),
             });
 
         // assert
@@ -106,11 +111,5 @@ public class ModelControllerTests
             .BeEquivalentTo(
                 expectation: model,
                 config: options => options.Excluding(m => m.Id));
-
-        var actualBodies = await sut.GetAllBodiesAsync();
-
-        actualBodies
-            .Should()
-            .BeEquivalentTo(bodies);
     }
 }

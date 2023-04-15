@@ -14,12 +14,14 @@ public class Sut : IDisposable
         BrandController brandController,
         ModelController modelController,
         EngineController engineController,
-        BodyController bodyController)
+        BodyController bodyController,
+        VehicleController vehicleController)
     {
         BrandController = brandController;
         ModelController = modelController;
         EngineController = engineController;
         BodyController = bodyController;
+        VehicleController = vehicleController;
         _db = db;
     }
 
@@ -27,6 +29,7 @@ public class Sut : IDisposable
     public ModelController ModelController { get; }
     public EngineController EngineController { get; }
     public BodyController BodyController { get; }
+    public VehicleController VehicleController { get; }
 
     public void SetupBrand(
         Brand brand)
@@ -64,8 +67,9 @@ public class Sut : IDisposable
         _db.SaveChanges();
     }
 
-    public async Task<List<Body>> GetAllBodiesAsync()
+    public void SetupVehicle(Vehicle vehicle)
     {
-        return await _db.Bodies.ToListAsync();
+        _db.Vehicles.Add(vehicle);
+        _db.SaveChanges();
     }
 }

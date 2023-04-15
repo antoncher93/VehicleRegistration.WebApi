@@ -21,7 +21,7 @@ public class EngineController : ControllerBase
     public async Task<IActionResult> GetAsync(
         int id)
     {
-        var engine = await _engines.GetEngineAsync(id);
+        var engine = await _engines.FindByIdAsync(id);
 
         if (engine is null)
         {

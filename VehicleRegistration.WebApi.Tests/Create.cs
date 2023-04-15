@@ -35,7 +35,7 @@ public static class Create
         return new Engine()
         {
             Type = randomEngineType,
-            Models = models ?? Create.RandomModel().AsList(),
+            Models = models,
             HorsePower = Values.RandomDouble(0.5, 9999.9),
             Volume = randomEngineType == EngineType.Electrical ? null : Values.RandomDouble(0.1, 99.9)
         };
@@ -47,5 +47,19 @@ public static class Create
         {
             Name = Values.RandomString(),
         };
+    }
+
+    public static Vehicle RandomVehicle(
+        string vin)
+    {
+        var model = Create.RandomModel();
+        var body = Create.RandomBody();
+        var engine = Create.RandomEngine();
+        return new Vehicle(
+            vin: vin,
+            model: model,
+            body: body,
+            engine: engine,
+            color: Values.RandomString());
     }
 }
