@@ -88,8 +88,9 @@ public class ApplicationDbContext : DbContext
     public DbSet<Types.Model> Models { get; set; }
     public DbSet<Body> Bodies { get; set; }
     public DbSet<Engine> Engines { get; set; }
-    
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Owner> Owners { get; set; }
+    public DbSet<Registration> Registrations { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -128,6 +129,14 @@ public class ApplicationDbContext : DbContext
                 .HasOne(v => v.Model)
                 .WithMany(model => model.Vehicles)
                 .HasForeignKey(vehicle => vehicle.ModelId);
+        });
+
+        modelBuilder.Entity<Owner>(entity =>
+        {
+            entity.ToTable("Owners");
+            entity.HasMany(owner => owner.Registrations)
+                .WithOne(registration => registration.Owner)
+                .HasForeignKey(registration => registration.OwnerId);
         });
     }
 }

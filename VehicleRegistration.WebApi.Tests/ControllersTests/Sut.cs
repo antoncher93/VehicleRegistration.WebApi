@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using VehicleRegistration.WebApi.Controllers;
+﻿using VehicleRegistration.WebApi.Controllers;
 using VehicleRegistration.WebApi.Infrastructure;
 using VehicleRegistration.WebApi.Tests.Extensions;
 using VehicleRegistration.WebApi.Types;
@@ -15,13 +14,17 @@ public class Sut : IDisposable
         ModelController modelController,
         EngineController engineController,
         BodyController bodyController,
-        VehicleController vehicleController)
+        VehicleController vehicleController,
+        OwnerController ownerController,
+        RegistrationController registrationController)
     {
         BrandController = brandController;
         ModelController = modelController;
         EngineController = engineController;
         BodyController = bodyController;
         VehicleController = vehicleController;
+        OwnerController = ownerController;
+        RegistrationController = registrationController;
         _db = db;
     }
 
@@ -30,6 +33,8 @@ public class Sut : IDisposable
     public EngineController EngineController { get; }
     public BodyController BodyController { get; }
     public VehicleController VehicleController { get; }
+    public OwnerController OwnerController { get; }
+    public RegistrationController RegistrationController { get; }
 
     public void SetupBrand(
         Brand brand)
@@ -55,11 +60,6 @@ public class Sut : IDisposable
         _db.SaveChanges();
     }
 
-    public void Dispose()
-    {
-        _db.Dispose();
-    }
-
     public void SetupBodies(List<Body> bodies)
     {
         _db.Bodies.Clear();
@@ -70,6 +70,23 @@ public class Sut : IDisposable
     public void SetupVehicle(Vehicle vehicle)
     {
         _db.Vehicles.Add(vehicle);
+        _db.SaveChanges();
+    }
+
+    public void SetupOwner(Owner owner)
+    {
+        _db.Owners.Add(owner);
+        _db.SaveChangesAsync();
+    }
+
+    public void Dispose()
+    {
+        _db.Dispose();
+    }
+
+    public void ClearRegistrations()
+    {
+        _db.Registrations.Clear();
         _db.SaveChanges();
     }
 }

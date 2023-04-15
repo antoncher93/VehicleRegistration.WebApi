@@ -1,5 +1,4 @@
-﻿using VehicleRegistration.WebApi.Tests.Extensions;
-using VehicleRegistration.WebApi.Types;
+﻿using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Tests;
 
@@ -50,16 +49,26 @@ public static class Create
     }
 
     public static Vehicle RandomVehicle(
-        string vin)
+        string? vin = default)
     {
         var model = Create.RandomModel();
         var body = Create.RandomBody();
         var engine = Create.RandomEngine();
         return new Vehicle(
-            vin: vin,
+            vin: vin ?? Values.RandomString(),
             model: model,
             body: body,
             engine: engine,
             color: Values.RandomString());
+    }
+
+    public static Owner RandomOwner()
+    {
+        return new Owner()
+        {
+            FirstName = Values.RandomString(),
+            LastName = Values.RandomString(),
+            MiddleName = Values.RandomString(),
+        };
     }
 }

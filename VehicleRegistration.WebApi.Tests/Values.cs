@@ -8,6 +8,11 @@ public static class Values
     {
         return new Random().Next(0, Int32.MaxValue);
     }
+    
+    public static int RandomInt(int minValue, int maxValue)
+    {
+        return new Random().Next(minValue, maxValue);
+    }
 
     public static List<T> ListOf<T>(Func<T> value)
     {

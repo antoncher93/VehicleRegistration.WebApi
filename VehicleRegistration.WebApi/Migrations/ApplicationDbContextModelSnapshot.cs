@@ -130,6 +130,58 @@ namespace VehicleRegistration.WebApi.Migrations
                     b.ToTable("Models");
                 });
 
+            modelBuilder.Entity("VehicleRegistration.WebApi.Types.Owner", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Owners", (string)null);
+                });
+
+            modelBuilder.Entity("VehicleRegistration.WebApi.Types.Registration", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("RegNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("VehicleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("Registrations");
+                });
+
             modelBuilder.Entity("VehicleRegistration.WebApi.Types.Vehicle", b =>
                 {
                     b.Property<int>("Id")
@@ -210,6 +262,25 @@ namespace VehicleRegistration.WebApi.Migrations
                     b.Navigation("Brand");
                 });
 
+            modelBuilder.Entity("VehicleRegistration.WebApi.Types.Registration", b =>
+                {
+                    b.HasOne("VehicleRegistration.WebApi.Types.Owner", "Owner")
+                        .WithMany("Registrations")
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VehicleRegistration.WebApi.Types.Vehicle", "Vehicle")
+                        .WithMany()
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+
+                    b.Navigation("Vehicle");
+                });
+
             modelBuilder.Entity("VehicleRegistration.WebApi.Types.Vehicle", b =>
                 {
                     b.HasOne("VehicleRegistration.WebApi.Types.Body", "Body")
@@ -245,6 +316,11 @@ namespace VehicleRegistration.WebApi.Migrations
             modelBuilder.Entity("VehicleRegistration.WebApi.Types.Model", b =>
                 {
                     b.Navigation("Vehicles");
+                });
+
+            modelBuilder.Entity("VehicleRegistration.WebApi.Types.Owner", b =>
+                {
+                    b.Navigation("Registrations");
                 });
 #pragma warning restore 612, 618
         }

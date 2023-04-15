@@ -9,4 +9,6 @@ public interface IRegistrationRepository
 
     Task<Registration?> FindRegistrationByRegNumber(
         string regNumber);
+
+    Task<List<string>> GetAllRegNumbersAsync();
 }

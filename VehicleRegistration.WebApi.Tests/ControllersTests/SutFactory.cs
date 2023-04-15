@@ -17,6 +17,8 @@ public static class SutFactory
         var models = new ModelRepository(db);
         var bodies = new BodyRepository(db);
         var vehicles = new VehicleRepository(db);
+        var owners = new OwnerRepository(db);
+        var registrations = new RegistrationRepository(db);
 
         var brandController = new BrandController(
             brands: brands);
@@ -37,6 +39,13 @@ public static class SutFactory
             modelRepository: models,
             engineRepository: engines,
             bodyRepository: bodies);
+
+        var ownerController = new OwnerController(owners);
+
+        var registrationController = new RegistrationController(
+            registrationRepository: registrations,
+            vehicleRepository: vehicles,
+            ownerRepository: owners);
         
         return new Sut(
             db: db,
@@ -44,6 +53,8 @@ public static class SutFactory
             modelController: modelController,
             engineController: engineController,
             bodyController: bodyController,
-            vehicleController: vehicleController);
+            vehicleController: vehicleController,
+            ownerController: ownerController,
+            registrationController: registrationController);
     }
 }
