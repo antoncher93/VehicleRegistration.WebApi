@@ -24,20 +24,14 @@ public static class Create
         };
     }
 
-    public static Engine RandomEngine(
-        List<Model>? models = default)
+    public static Engine RandomEngine()
     {
-        var randomEngineType = Enum
-            .GetValues<EngineType>()
-            .MinBy(_ => Values.RandomInt());
-
-        return new Engine()
-        {
-            Type = randomEngineType,
-            Models = models,
-            HorsePower = Values.RandomDouble(0.5, 9999.9),
-            Volume = randomEngineType == EngineType.Electrical ? null : Values.RandomDouble(0.1, 99.9)
-        };
+        var randomEngineType = new EngineType() { Name = Values.RandomString() };
+        return new Engine(
+            number: Values.RandomString(),
+            type: randomEngineType,
+            horsePower: Values.RandomDouble(0.5, 9999.9),
+            volume: Values.RandomDouble(0.1, 9.9));
     }
 
     public static Body RandomBody()
@@ -59,6 +53,7 @@ public static class Create
             model: model,
             body: body,
             engine: engine,
+            transmission: Values.RandomEnum<Transmission>(),
             color: Values.RandomString());
     }
 
@@ -70,5 +65,15 @@ public static class Create
             LastName = Values.RandomString(),
             MiddleName = Values.RandomString(),
         };
+    }
+
+    public static Registration RandomRegistration(
+        bool? isActive = default)
+    {
+        return new Registration(
+            vehicle: Create.RandomVehicle(),
+            owner: Create.RandomOwner(),
+            regNumber: Values.RandomString(),
+            isActive: isActive ?? true);
     }
 }

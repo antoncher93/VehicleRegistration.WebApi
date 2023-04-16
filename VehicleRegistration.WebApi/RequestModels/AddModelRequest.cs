@@ -9,8 +9,4 @@ public class AddModelRequest
     
     [Required]
     public int BrandId { get; set; }
-    
-    public List<int>? EngineIds { get; set; }
-    
-    public List<int>? BodyIds { get; set; }
 }

@@ -12,6 +12,10 @@ public static class ServiceCollectionExtensions
         serviceCollection.AddScoped<IEngineRepository, EngineRepository>();
         serviceCollection.AddScoped<IModelRepository, ModelRepository>();
         serviceCollection.AddScoped<IBodyRepository, BodyRepository>();
+        serviceCollection.AddScoped<IVehicleRepository, VehicleRepository>();
+        serviceCollection.AddScoped<IOwnerRepository, OwnerRepository>();
+        serviceCollection.AddScoped<IRegistrationRepository, RegistrationRepository>();
+        serviceCollection.AddScoped<IEngineTypeRepository, EngineTypeRepository>();
         return serviceCollection;
     }
 }

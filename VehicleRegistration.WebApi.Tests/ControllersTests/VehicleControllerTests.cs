@@ -26,8 +26,11 @@ public class VehicleControllerTests
             .BeEquivalentTo(vehicle);
     }
 
-    [Fact]
-    public async Task PostMethodReturnsVehicle()
+    [Theory]
+    [InlineData(Transmission.Automatic)]
+    [InlineData(Transmission.Manual)]
+    public async Task PostMethodReturnsVehicle(
+        Transmission transmission)
     {
         using var sut = SutFactory.Create();
 
@@ -40,23 +43,24 @@ public class VehicleControllerTests
         var body = Create.RandomBody();
         sut.SetupBodies(body.AsList());
 
-        var engine = Create.RandomEngine(models: model.AsList());
-        sut.SetupEngines(engine.AsList());
+        var engine = Create.RandomEngine();
 
         var expectedVehicle = new Vehicle(
             vin: vin,
             model: model,
             body: body,
             engine: engine,
+            transmission: transmission,
             color: color);
 
         var response = await sut.VehicleController.PostAsync(
             request: new AddVehicleRequest()
             {
                 BodyId = body.Id,
-                EngineId = engine.Id,
+                Engine = engine,
                 ModelId = model.Id,
                 Color = color,
+                Transmission = (int)transmission,
                 Vin = vin
             });
 

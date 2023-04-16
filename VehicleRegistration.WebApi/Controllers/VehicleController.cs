@@ -13,19 +13,23 @@ public class VehicleController : ControllerBase
     private readonly IModelRepository _modelRepository;
     private readonly IEngineRepository _engineRepository;
     private readonly IBodyRepository _bodyRepository;
+    private readonly IEngineTypeRepository _engineTypeRepository;
 
     public VehicleController(
         IVehicleRepository vehicleRepository,
         IModelRepository modelRepository,
         IEngineRepository engineRepository,
-        IBodyRepository bodyRepository)
+        IBodyRepository bodyRepository,
+        IEngineTypeRepository engineTypeRepository)
     {
         _vehicleRepository = vehicleRepository;
         _modelRepository = modelRepository;
         _engineRepository = engineRepository;
         _bodyRepository = bodyRepository;
+        _engineTypeRepository = engineTypeRepository;
     }
 
+    [HttpGet("{vin}")]
     public async Task<IActionResult> GetByVinAsync(string vin)
     {
         var vehicle = await _vehicleRepository.FindByVinAsync(vin);
@@ -36,6 +40,7 @@ public class VehicleController : ControllerBase
         return this.Ok(vehicle);
     }
 
+    [HttpPost]
     public async Task<IActionResult> PostAsync(
         [FromBody] AddVehicleRequest request)
     {
@@ -43,18 +48,28 @@ public class VehicleController : ControllerBase
         if (model is null)
             return this.BadRequest();
 
-        var engine = await _engineRepository.FindByIdAsync(request.EngineId);
-        if (engine is null)
-            return this.BadRequest();
-
         var body = await _bodyRepository.FindByIdAsync(request.BodyId);
         if (body is null)
             return this.BadRequest();
+
+        var engineType = await _engineTypeRepository.GetByIdAsync(request.EngineTypeId);
+
+        if (engineType is null)
+            return this.BadRequest();
+        
+        var engine = new Engine(
+            number: request.EngineNumber,
+            type: engineType,
+            horsePower: request.HorsePower,
+            volume: request.Volume);
+
+        await _engineRepository.AddEngineAsync(engine);
 
         var vehicle = new Vehicle(
             model: model,
             body: body,
             engine: engine,
+            transmission: (Transmission)request.Transmission,
             vin: request.Vin,
             color: request.Color);
 

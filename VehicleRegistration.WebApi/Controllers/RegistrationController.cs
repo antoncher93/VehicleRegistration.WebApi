@@ -38,6 +38,22 @@ public class RegistrationController : ControllerBase
         return this.Ok(registration);
     }
 
+    [HttpPatch]
+    public async Task<IActionResult> DisableAsync(
+        [FromBody] int registrationId)
+    {
+        var registration = await _registrationRepository.FindByIdAsync(registrationId);
+
+        if (registration is null || !registration.IsActive)
+            return this.BadRequest();
+
+        registration.IsActive = false;
+
+        await _registrationRepository.UpdateAsync(registration);
+
+        return this.Ok(registration);
+    }
+
     [HttpPost]
     public async Task<IActionResult> PostAsync(
         [FromBody] AddRegistrationRequest request)
@@ -56,7 +72,8 @@ public class RegistrationController : ControllerBase
         var registration = new Registration(
             owner: owner,
             vehicle: vehicle,
-            regNumber: regNumber);
+            regNumber: regNumber,
+            isActive: true);
 
         await _registrationRepository.AddAsync(registration);
 

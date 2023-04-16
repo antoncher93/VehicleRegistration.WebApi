@@ -31,7 +31,8 @@ public class RegistrationControllerTests
         var expectedRegistration = new Registration(
             vehicle: vehicle,
             owner: owner,
-            regNumber: regNumber);
+            regNumber: regNumber,
+            true);
 
         result
             .As<OkObjectResult>()
@@ -40,6 +41,33 @@ public class RegistrationControllerTests
             .BeEquivalentTo(
                 expectation: expectedRegistration,
                 config: options => options
+                    .Excluding(reg => reg.OwnerId)
+                    .Excluding(reg => reg.VehicleId));
+    }
+
+    [Fact]
+    public async Task DisableMethodSetActiveAsFalse()
+    {
+        using var sut = SutFactory.Create();
+        var registration = Create.RandomRegistration();
+        sut.SetupRegistration(registration);
+        var result = await sut.RegistrationController
+            .DisableAsync(registration.Id);
+
+        var expectedRegistration = new Registration(
+            vehicle: registration.Vehicle,
+            owner: registration.Owner,
+            regNumber: registration.RegNumber,
+            isActive: false);
+
+        result
+            .As<OkObjectResult>()
+            .Value
+            .Should()
+            .BeEquivalentTo(
+                expectation: expectedRegistration,
+                config: options => options
+                    .Excluding(reg => reg.Id)
                     .Excluding(reg => reg.OwnerId)
                     .Excluding(reg => reg.VehicleId));
     }

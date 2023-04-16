@@ -11,12 +11,80 @@ public class ApplicationDbContext : DbContext
     {
         this.Database.EnsureCreated();
 
-        //this.AddInitialData();
+        this.AddInitialData();
     }
 
+    
+
+    public DbSet<Brand> Brands { get; set; }
+    public DbSet<Model> Models { get; set; }
+    public DbSet<Body> Bodies { get; set; }
+    public DbSet<Engine> Engines { get; set; }
+    public DbSet<EngineType> EngineTypes { get; set; }
+    public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Owner> Owners { get; set; }
+    public DbSet<Registration> Registrations { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<Brand>(entity =>
+        {
+            entity.ToTable("Brands");
+            entity.HasKey(brand => brand.Id);
+            entity
+                .HasMany(brand => brand.Models)
+                .WithOne(model => model.Brand)
+                .HasForeignKey(model => model.BrandId);
+        });
+
+        modelBuilder.Entity<Vehicle>(entity =>
+        {
+            entity.ToTable("Vehicles");
+            entity
+                .HasOne(v => v.Model)
+                .WithMany(model => model.Vehicles)
+                .HasForeignKey(vehicle => vehicle.ModelId);
+
+            entity
+                .HasOne(vehicle => vehicle.Engine)
+                .WithOne(engine => engine.Vehicle)
+                .HasForeignKey<Vehicle>(v => v.EngineId);
+
+            entity
+                .HasOne(vehicle => vehicle.Body)
+                .WithMany(body => body.Vehicles)
+                .HasForeignKey(v => v.BodyId);
+        });
+
+        modelBuilder.Entity<Engine>(entity =>
+        {
+            entity.ToTable("Engines");
+            entity
+                .HasOne(e => e.Type)
+                .WithMany(type => type.Engines)
+                .HasForeignKey(e => e.EngineTypeId);
+        });
+
+        modelBuilder.Entity<Owner>(entity =>
+        {
+            entity.ToTable("Owners");
+            entity.HasMany(owner => owner.Registrations)
+                .WithOne(registration => registration.Owner)
+                .HasForeignKey(registration => registration.OwnerId);
+        });
+
+        modelBuilder.Entity<EngineType>(entity =>
+        {
+            entity.ToTable("EngineTypes");
+        });
+    }
+    
     private void AddInitialData()
     {
-        if (!this.Brands.Any())
+        if (!Bodies.Any())
         {
             var bodies = new Body[]
             {
@@ -37,106 +105,35 @@ public class ApplicationDbContext : DbContext
                     Name = "Универсал"
                 }
             };
-            this.Bodies.AddRange(bodies);
-            
-            
-            var engines = new Engine[]
-            {
-                new Engine()
-                {
-                    HorsePower = 100.0,
-                    Type = Types.EngineType.Gasoline,
-                    Volume = 1.6,
-                },
-                new Engine()
-                {
-                    HorsePower = 125.0,
-                    Type = Types.EngineType.Gasoline,
-                    Volume = 1.8,
-                },
-                new Engine()
-                {
-                    HorsePower = 145.0,
-                    Type = Types.EngineType.Gasoline,
-                    Volume = 2.0,
-                }
-            };
-            this.Engines.AddRange(engines);
+            Bodies.AddRange(bodies);
+            SaveChanges();
+        }
 
-            var models = new Model[]
-            {
-                new Model()
-                {
-                    ModelName = "Focus II",
-                    Engines = engines.ToList(),
-                    Bodies = bodies.ToList(),
-                },
-            };
-            this.Models.AddRange(models);
-
+        if (!this.Brands.Any())
+        {
             var brand = new Brand()
             {
                 Name = "Ford",
-                Models = models.ToList(),
-            };
-            this.Brands.AddRange(brand);
-            this.SaveChanges();
-        }
-    }
-
-    public DbSet<Brand> Brands { get; set; }
-    public DbSet<Types.Model> Models { get; set; }
-    public DbSet<Body> Bodies { get; set; }
-    public DbSet<Engine> Engines { get; set; }
-    public DbSet<Vehicle> Vehicles { get; set; }
-    public DbSet<Owner> Owners { get; set; }
-    public DbSet<Registration> Registrations { get; set; }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        base.OnModelCreating(modelBuilder);
-
-        modelBuilder.Entity<Brand>(entity =>
-        {
-            entity.ToTable("Brand");
-            entity.HasKey(brand => brand.Id);
-            entity
-                .HasMany(brand => brand.Models)
-                .WithOne(model => model.Brand)
-                .HasForeignKey(model => model.BrandId);
-        });
-
-        modelBuilder.Entity<Model>(entity =>
-        {
-            entity
-                .HasMany(model => model.Bodies)
-                .WithMany(body => body.Models)
-                .UsingEntity(e =>
+                Models = new List<Model>()
                 {
-                    e.ToTable("ModelBodies");
-                });
+                    new Model()
+                    {
+                        ModelName = "Focus",
+                    }
+                }
+            };
+            Brands.Add(brand);
+            SaveChanges();
+        }
 
-            entity
-                .HasMany(model => model.Engines)
-                .WithMany(engine => engine.Models)
-                .UsingEntity(e => e.ToTable("ModelEngines"));
-        });
-
-        modelBuilder.Entity<Vehicle>(entity =>
+        if (!this.EngineTypes.Any())
         {
-            entity.ToTable("Vehicle");
-            entity
-                .HasOne(v => v.Model)
-                .WithMany(model => model.Vehicles)
-                .HasForeignKey(vehicle => vehicle.ModelId);
-        });
+            this.EngineTypes.Add(new EngineType()
+            {
+                Name = "Gasoline"
+            });
+        }
 
-        modelBuilder.Entity<Owner>(entity =>
-        {
-            entity.ToTable("Owners");
-            entity.HasMany(owner => owner.Registrations)
-                .WithOne(registration => registration.Owner)
-                .HasForeignKey(registration => registration.OwnerId);
-        });
+        SaveChanges();
     }
 }

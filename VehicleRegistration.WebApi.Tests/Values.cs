@@ -25,9 +25,21 @@ public static class Values
 
         return list;
     }
+    
+    public static double RandomDouble()
+    {
+        return new Random().NextDouble();
+    }
 
     public static double RandomDouble(double minValue, double maxValue)
     {
         return new Random().NextDouble() * (maxValue - minValue) + minValue;
+    }
+
+    public static T RandomEnum<T>() where T : struct, Enum
+    {
+        return Enum
+            .GetValues<T>()
+            .MinBy(_ => Values.RandomInt());
     }
 }

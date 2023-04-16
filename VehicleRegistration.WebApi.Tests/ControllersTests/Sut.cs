@@ -12,7 +12,6 @@ public class Sut : IDisposable
         ApplicationDbContext db,
         BrandController brandController,
         ModelController modelController,
-        EngineController engineController,
         BodyController bodyController,
         VehicleController vehicleController,
         OwnerController ownerController,
@@ -20,7 +19,6 @@ public class Sut : IDisposable
     {
         BrandController = brandController;
         ModelController = modelController;
-        EngineController = engineController;
         BodyController = bodyController;
         VehicleController = vehicleController;
         OwnerController = ownerController;
@@ -30,7 +28,6 @@ public class Sut : IDisposable
 
     public BrandController BrandController { get; }
     public ModelController ModelController { get; }
-    public EngineController EngineController { get; }
     public BodyController BodyController { get; }
     public VehicleController VehicleController { get; }
     public OwnerController OwnerController { get; }
@@ -87,6 +84,12 @@ public class Sut : IDisposable
     public void ClearRegistrations()
     {
         _db.Registrations.Clear();
+        _db.SaveChanges();
+    }
+
+    public void SetupRegistration(Registration registration)
+    {
+        _db.Registrations.Add(registration);
         _db.SaveChanges();
     }
 }

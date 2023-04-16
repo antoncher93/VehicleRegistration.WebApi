@@ -6,11 +6,16 @@ public class Registration
     {
     }
 
-    public Registration(Vehicle vehicle, Owner owner, string regNumber)
+    public Registration(
+        Vehicle vehicle,
+        Owner owner,
+        string regNumber,
+        bool isActive)
     {
         Vehicle = vehicle;
         Owner = owner;
         RegNumber = regNumber;
+        IsActive = isActive;
     }
     public int Id { get; set; }
     public string RegNumber { get; set; }
@@ -18,4 +23,6 @@ public class Registration
     public Owner Owner { get; set; }
     public int OwnerId { get; set; }
     public int VehicleId { get; set; }
+    
+    public bool IsActive { get; set; }
 }

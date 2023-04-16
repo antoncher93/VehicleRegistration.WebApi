@@ -30,4 +30,16 @@ public class RegistrationRepository : IRegistrationRepository
             .Select(r => r.RegNumber)
             .ToListAsync();
     }
+
+    public async Task<Registration?> FindByIdAsync(int registrationId)
+    {
+        return await _db.Registrations
+            .FirstOrDefaultAsync(r => r.Id == registrationId);
+    }
+
+    public async Task UpdateAsync(Registration registration)
+    {
+        _db.Registrations.Update(registration);
+        await _db.SaveChangesAsync();
+    }
 }

@@ -11,7 +11,8 @@ public class Vehicle
     string vin,
     Model model,
     Body body,
-    Engine engine, 
+    Engine engine,
+    Transmission transmission,
     string color)
     {
         Model = model;
@@ -19,6 +20,7 @@ public class Vehicle
         VIN = vin;
         Engine = engine;
         Color = color;
+        Transmission = transmission;
     }
     
     public int Id { get; set; }
@@ -32,6 +34,8 @@ public class Vehicle
     public int BodyId { get; set; }
     
     public string VIN { get; set; }
+    
+    public Transmission Transmission { get; set; }
     
     public string Color { get; set; }
     

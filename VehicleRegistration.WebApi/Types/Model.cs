@@ -13,8 +13,6 @@ public class Model
     
     public string ModelName { get; set; }
 
-    public ICollection<Body> Bodies { get; set; } = new List<Body>();
-    
-    public ICollection<Engine> Engines { get; set; } = new List<Engine>();
+    [JsonIgnore]
     public ICollection<Vehicle> Vehicles { get; set; } = new List<Vehicle>();
 }

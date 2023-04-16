@@ -11,4 +11,10 @@ public interface IRegistrationRepository
         string regNumber);
 
     Task<List<string>> GetAllRegNumbersAsync();
+    
+    Task<Registration?> FindByIdAsync(
+        int registrationId);
+
+    Task UpdateAsync(
+        Registration registration);
 }

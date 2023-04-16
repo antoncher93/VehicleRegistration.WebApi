@@ -21,55 +21,16 @@ public class ModelRepository : IModelRepository
         await _db.SaveChangesAsync();
     }
 
-    public async Task<Model?> GetByIdAsync(int modelId)
-    {
-        return await _db.Models
-            .Include(model => model.Bodies)
-            .Include(model => model.Engines)
-            .FirstOrDefaultAsync(model => model.Id == modelId);
-    }
-
-    public async Task<Types.Model?> GetByNameAsync(
-        string brandName,
-        string modelName)
-    {
-        return await _db.Models
-            .Include(model => model.Bodies)
-            .Include(model => model.Engines)
-            .FirstOrDefaultAsync(model 
-                => model.Brand.Name == brandName && model.ModelName == modelName);
-    }
-
-    public async Task AddEngineForModelAsync(
-        int id,
-        Engine engine)
-    {
-        var model = await _db.Models.FirstOrDefaultAsync(model => model.Id == id);
-        if (model != null)
-        {
-            model.Engines.Add(engine);
-            await _db.SaveChangesAsync();
-        }
-    }
-
-    public Task AddBodyForModel(
-        int id,
-        Body body)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task UpdateAsync(Types.Model model)
-    {
-        _db.Models.Update(model);
-        await _db.SaveChangesAsync();
-    }
-
     public Task<List<Model>> GetModelsOfBrandAsync(
         int brandId)
     {
         return _db.Models
             .Where(model => model.BrandId == brandId)
             .ToListAsync();
+    }
+
+    public Task<Model?> GetByIdAsync(int id)
+    {
+        return _db.Models.FirstOrDefaultAsync(m => m.Id == id);
     }
 }
