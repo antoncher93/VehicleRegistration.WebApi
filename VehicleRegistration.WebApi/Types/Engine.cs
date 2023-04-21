@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace VehicleRegistration.WebApi.Types;
 
@@ -26,6 +26,7 @@ public class Engine
     public EngineType Type { get; set; }
     
     [JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public int EngineTypeId { get; set; }
     
     public double HorsePower { get; set; }
@@ -33,8 +34,10 @@ public class Engine
     public double? Volume { get; set; }
     
     [JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public Vehicle Vehicle { get; set; }
     
     [JsonIgnore]
+    [Newtonsoft.Json.JsonIgnore]
     public int VehicleId { get; set; }
 }

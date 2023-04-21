@@ -44,6 +44,7 @@ public class VehicleControllerTests
         sut.SetupBodies(body.AsList());
 
         var engine = Create.RandomEngine();
+        sut.SetupEngineType(engine.Type);
 
         var expectedVehicle = new Vehicle(
             vin: vin,
@@ -57,11 +58,14 @@ public class VehicleControllerTests
             request: new AddVehicleRequest()
             {
                 BodyId = body.Id,
-                Engine = engine,
                 ModelId = model.Id,
                 Color = color,
                 Transmission = (int)transmission,
-                Vin = vin
+                Vin = vin,
+                EngineTypeId = engine.Type.Id,
+                Volume = engine.Volume,
+                EngineNumber = engine.Number,
+                HorsePower = engine.HorsePower,
             });
 
         response
@@ -72,6 +76,7 @@ public class VehicleControllerTests
                     .Excluding(m => m.Id)
                     .Excluding(m => m.BodyId)
                     .Excluding(m => m.EngineId)
-                    .Excluding(m => m.ModelId));
+                    .Excluding(m => m.ModelId)
+                    .Excluding(m => m.Engine.Id));
     }
 }

@@ -24,22 +24,38 @@ public class RegistrationController : ControllerBase
         _ownerRepository = ownerRepository;
     }
 
+    [HttpGet("{regNumber}/list")]
     public async Task<IActionResult> GetAsync(
         string regNumber)
     {
-        var registration = await _registrationRepository
-            .FindRegistrationByRegNumber(regNumber);
+        var registrations = await _registrationRepository
+            .FindRegistrationsByRegNumberAsync(regNumber);
 
-        if (registration is null)
-        {
-            return this.NotFound();
-        }
+        return this.Ok(registrations);
+    }
+    
+    [HttpGet("byVehicleId/{vehicleId}")]
+    public async Task<IActionResult> GetByVehicleIdAsync(
+        int vehicleId)
+    {
+        var registrations = await _registrationRepository
+            .FindRegistrationByVehicleId(vehicleId);
 
-        return this.Ok(registration);
+        return this.Ok(registrations);
+    }
+    
+    [HttpGet("byOwnerId/{ownerId}")]
+    public async Task<IActionResult> GetByOwnerIdAsync(
+        int ownerId)
+    {
+        var registrations = await _registrationRepository
+            .FindRegistrationByOwnerId(ownerId);
+
+        return this.Ok(registrations);
     }
 
     [HttpPatch]
-    public async Task<IActionResult> DisableAsync(
+    public async Task<IActionResult> DeactivateAsync(
         [FromBody] int registrationId)
     {
         var registration = await _registrationRepository.FindByIdAsync(registrationId);
@@ -47,9 +63,7 @@ public class RegistrationController : ControllerBase
         if (registration is null || !registration.IsActive)
             return this.BadRequest();
 
-        registration.IsActive = false;
-
-        await _registrationRepository.UpdateAsync(registration);
+        await _registrationRepository.DeactivateAsync(registration);
 
         return this.Ok(registration);
     }
@@ -72,7 +86,7 @@ public class RegistrationController : ControllerBase
         var registration = new Registration(
             owner: owner,
             vehicle: vehicle,
-            regNumber: regNumber,
+            regNumber: regNumber.ToUpper(),
             isActive: true);
 
         await _registrationRepository.AddAsync(registration);

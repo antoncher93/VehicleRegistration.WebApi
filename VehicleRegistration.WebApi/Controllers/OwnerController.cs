@@ -16,6 +16,7 @@ public class OwnerController : ControllerBase
         _ownerRepository = ownerRepository;
     }
 
+    [HttpGet]
     public async Task<IActionResult> GetByFullName(
         [FromQuery] GetOwnerByFullNameRequest request)
     {
@@ -32,6 +33,7 @@ public class OwnerController : ControllerBase
         return this.Ok(owner);
     }
 
+    [HttpPost]
     public async Task<IActionResult> PostAsync(
         [FromBody] AddOwnerRequest request)
     {

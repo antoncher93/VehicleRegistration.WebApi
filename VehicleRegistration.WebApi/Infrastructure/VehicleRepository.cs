@@ -21,6 +21,13 @@ public class VehicleRepository : IVehicleRepository
 
     public async Task<Vehicle?> FindByVinAsync(string vin)
     {
-        return await _db.Vehicles.FirstOrDefaultAsync(vehicle => vehicle.VIN == vin);
+        return await _db.Vehicles
+            .Where(vehicle => vehicle.VIN == vin)
+            .Include(vehicle => vehicle.Engine)
+            .ThenInclude(engine => engine.Type)
+            .Include(vehicle => vehicle.Model)
+            .ThenInclude(model => model.Brand)
+            .Include(vehicle => vehicle.Body)
+            .FirstOrDefaultAsync();
     }
 }

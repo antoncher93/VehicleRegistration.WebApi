@@ -6,9 +6,9 @@ public class Model
 {
     public int Id { get; set; }
     
-    [JsonIgnore]
     public Brand Brand { get; set; } 
     
+    [JsonIgnore]
     public int BrandId { get; set; }
     
     public string ModelName { get; set; }

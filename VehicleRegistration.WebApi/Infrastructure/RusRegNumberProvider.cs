@@ -21,6 +21,8 @@ public class RusRegNumberProvider
             NextSeries();
         }
 
+        _n++;
+
         return result;
     }
 

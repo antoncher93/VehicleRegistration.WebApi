@@ -7,7 +7,7 @@ public interface IRegistrationRepository
     public Task AddAsync(
         Registration registration);
 
-    Task<Registration?> FindRegistrationByRegNumber(
+    Task<List<Registration>> FindRegistrationsByRegNumberAsync(
         string regNumber);
 
     Task<List<string>> GetAllRegNumbersAsync();
@@ -15,6 +15,11 @@ public interface IRegistrationRepository
     Task<Registration?> FindByIdAsync(
         int registrationId);
 
-    Task UpdateAsync(
-        Registration registration);
+    Task<List<Registration>> FindRegistrationByVehicleId(
+        int vehicleId);
+    
+    Task<List<Registration>> FindRegistrationByOwnerId(
+        int ownerId);
+
+    Task DeactivateAsync(Registration registration);
 }

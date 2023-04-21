@@ -51,9 +51,9 @@ public class Sut : IDisposable
         return _db.Brands.FirstOrDefault(brand => brand.Name == brandName);
     }
 
-    public void SetupEngines(List<Engine> engines)
+    public void SetupEngineType(EngineType engineType)
     {
-        _db.Engines.AddRange(engines);
+        _db.EngineTypes.Add(engineType);
         _db.SaveChanges();
     }
 

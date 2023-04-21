@@ -52,7 +52,7 @@ public class RegistrationControllerTests
         var registration = Create.RandomRegistration();
         sut.SetupRegistration(registration);
         var result = await sut.RegistrationController
-            .DisableAsync(registration.Id);
+            .DeactivateAsync(registration.Id);
 
         var expectedRegistration = new Registration(
             vehicle: registration.Vehicle,

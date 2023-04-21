@@ -32,7 +32,8 @@ public class VehicleController : ControllerBase
     [HttpGet("{vin}")]
     public async Task<IActionResult> GetByVinAsync(string vin)
     {
-        var vehicle = await _vehicleRepository.FindByVinAsync(vin);
+        var vehicle = await _vehicleRepository
+            .FindByVinAsync(vin);
         
         if (vehicle is null)
             return this.NotFound();
@@ -62,7 +63,7 @@ public class VehicleController : ControllerBase
             type: engineType,
             horsePower: request.HorsePower,
             volume: request.Volume);
-
+        
         await _engineRepository.AddEngineAsync(engine);
 
         var vehicle = new Vehicle(

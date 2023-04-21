@@ -33,7 +33,8 @@ public static class SutFactory
             vehicleRepository: vehicles,
             modelRepository: models,
             engineRepository: engines,
-            bodyRepository: bodies);
+            bodyRepository: bodies,
+            engineTypeRepository: new EngineTypeRepository(db));
 
         var ownerController = new OwnerController(owners);
 

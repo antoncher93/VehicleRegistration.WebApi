@@ -57,6 +57,11 @@ public class ApplicationDbContext : DbContext
                 .HasOne(vehicle => vehicle.Body)
                 .WithMany(body => body.Vehicles)
                 .HasForeignKey(v => v.BodyId);
+
+            entity
+                .HasMany(vehicle => vehicle.Registrations)
+                .WithOne(registration => registration.Vehicle)
+                .HasForeignKey(registration => registration.VehicleId);
         });
 
         modelBuilder.Entity<Engine>(entity =>
@@ -79,6 +84,19 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<EngineType>(entity =>
         {
             entity.ToTable("EngineTypes");
+        });
+
+        modelBuilder.Entity<Registration>(entity =>
+        {
+            entity
+                .HasOne(r => r.Vehicle)
+                .WithMany(v => v.Registrations)
+                .HasForeignKey(r => r.VehicleId);
+
+            entity
+                .HasOne(r => r.Owner)
+                .WithMany(owner => owner.Registrations)
+                .HasForeignKey(r => r.OwnerId);
         });
     }
     
@@ -128,10 +146,15 @@ public class ApplicationDbContext : DbContext
 
         if (!this.EngineTypes.Any())
         {
-            this.EngineTypes.Add(new EngineType()
-            {
-                Name = "Gasoline"
-            });
+            this.EngineTypes.AddRange(
+                new EngineType()
+                {
+                    Name = "Бензин"
+                },
+                new EngineType()
+                {
+                    Name = "Дизель"
+                });
         }
 
         SaveChanges();
