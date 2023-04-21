@@ -1,4 +1,6 @@
-﻿namespace VehicleRegistration.WebApi.Types;
+﻿using Newtonsoft.Json;
+
+namespace VehicleRegistration.WebApi.Types;
 
 public class Vehicle
 {
@@ -8,41 +10,44 @@ public class Vehicle
     }
 
     public Vehicle(
-    string barnd, 
-    string model, 
-    string body, 
-    string vin, 
-    string 
-    regNumber, 
-    Owner owner, 
-    Engine engine, 
+    string vin,
+    Model model,
+    Body body,
+    Engine engine,
+    Transmission transmission,
     string color)
     {
-        Barnd = barnd;
         Model = model;
         Body = body;
         VIN = vin;
-        RegNumber = regNumber;
-        Owner = owner;
         Engine = engine;
         Color = color;
+        Transmission = transmission;
     }
     
     public int Id { get; set; }
     
-    public string Barnd { get; set; }
+    public Model Model { get; set; }
     
-    public string Model { get; set; }
+    [JsonIgnore]
+    public int ModelId { get; set; }
     
-    public string Body { get; set; }
+    public Body Body { get; set; }
+    
+    [JsonIgnore]
+    public int BodyId { get; set; }
     
     public string VIN { get; set; }
     
-    public string RegNumber { get; set; }
+    public Transmission Transmission { get; set; }
     
     public string Color { get; set; }
     
     public Engine Engine { get; set; }
     
-    public Owner Owner { get; set; }
+    [JsonIgnore]
+    public int EngineId { get; set; }
+
+    [JsonIgnore]
+    public IEnumerable<Registration> Registrations { get; set; }
 }

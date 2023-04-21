@@ -4,7 +4,7 @@ using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Infrastructure;
 
-internal class BrandRepository : IBrandRepository
+public class BrandRepository : IBrandRepository
 {
     private readonly ApplicationDbContext _db;
 
@@ -36,53 +36,20 @@ internal class BrandRepository : IBrandRepository
         return brand;
     }
 
-    public async Task<Types.Model?> GetModelAsync(
-        string brandName,
-        string modelName)
+    public async Task<Brand?> FindByIdAsync(int id)
     {
-        var brand = await _db.Brands.FirstOrDefaultAsync(b => b.Name == brandName);
-
-        if (brand is null)
-            return null;
-
-        var model = await _db.Models
-            .Include(m => m.Bodies)
-            .Include(m => m.Engines)
-            .FirstOrDefaultAsync(m => m.ModelName == modelName);
-
-        return model;
+        return await _db.Brands.FirstOrDefaultAsync(brand => brand.Id == id);
     }
 
     public async Task AddAsync(Brand brand)
     {
-        if (_db.Brands != null)
-        {
-            await _db.Brands.AddAsync(brand);
-            await _db.SaveChangesAsync();
-        }
+        await _db.Brands.AddAsync(brand);
+        await _db.SaveChangesAsync();
     }
 
     public async Task AddModelAsync(Types.Model model)
     {
         await _db.Models!.AddAsync(model);
         await _db.SaveChangesAsync();
-    }
-
-    private void AddInitData()
-    {
-        var camry40 = new Types.Model() { ModelName = "Camry 40" };
-
-        var toyota = new Brand()
-        {
-            Name = "Toyota",
-            Models = new List<Types.Model>()
-            {
-                camry40,
-            }
-        };
-
-        _db.Models.Add(camry40);
-        _db.Brands.Add(toyota);
-        _db.SaveChanges();
     }
 }

@@ -14,7 +14,7 @@ public class EngineRepository : IEngineRepository
         _db = db;
     }
 
-    public Task<Engine?> GetEngineAsync(
+    public Task<Engine?> FindByIdAsync(
         int id)
     {
         return _db.Engines.FirstOrDefaultAsync(engine => engine.Id == id);

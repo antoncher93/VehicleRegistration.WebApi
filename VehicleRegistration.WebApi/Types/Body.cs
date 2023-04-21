@@ -8,5 +8,5 @@ public class Body
     public string Name { get; set; }
     
     [JsonIgnore]
-    public List<Model> Models { get; set; } = new();
+    public ICollection<Vehicle> Vehicles { get; set; }
 }

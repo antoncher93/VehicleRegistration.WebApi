@@ -9,13 +9,8 @@ public interface IBrandRepository
     Task<Brand?> GetBrandAsync(
         string brandName);
 
-    Task<Types.Model?> GetModelAsync(
-        string brandName,
-        string modelName);
+    Task<Brand?> FindByIdAsync(int id);
 
     Task AddAsync(
         Brand brand);
-
-    Task AddModelAsync(
-        Types.Model model);
 }

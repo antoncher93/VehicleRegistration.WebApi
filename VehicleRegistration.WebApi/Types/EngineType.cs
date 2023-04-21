@@ -1,9 +1,12 @@
-﻿namespace VehicleRegistration.WebApi.Types;
+﻿using Newtonsoft.Json;
 
-public enum EngineType
+namespace VehicleRegistration.WebApi.Types;
+
+public class EngineType
 {
-    Gasoline,
-    Diesel,
-    Electrical,
-    Hybrid
+    public int Id { get; set; }
+    public string Name { get; set; }
+    
+    [JsonIgnore]
+    public ICollection<Engine>? Engines { get; set; }
 }

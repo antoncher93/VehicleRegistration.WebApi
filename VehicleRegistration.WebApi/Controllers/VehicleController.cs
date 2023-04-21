@@ -9,143 +9,73 @@ namespace VehicleRegistration.WebApi.Controllers;
 [Route("api/vehicle")]
 public class VehicleController : ControllerBase
 {
-    private readonly IBrandRepository _brands;
-    private readonly IModelRepository _models;
-    private readonly IEngineRepository _engines;
-    private readonly IBodyRepository _bodies;
+    private readonly IVehicleRepository _vehicleRepository;
+    private readonly IModelRepository _modelRepository;
+    private readonly IEngineRepository _engineRepository;
+    private readonly IBodyRepository _bodyRepository;
+    private readonly IEngineTypeRepository _engineTypeRepository;
 
     public VehicleController(
-        IBrandRepository brands,
-        IModelRepository models,
-        IEngineRepository engines,
-        IBodyRepository bodies)
+        IVehicleRepository vehicleRepository,
+        IModelRepository modelRepository,
+        IEngineRepository engineRepository,
+        IBodyRepository bodyRepository,
+        IEngineTypeRepository engineTypeRepository)
     {
-        _brands = brands;
-        _models = models;
-        _engines = engines;
-        _bodies = bodies;
+        _vehicleRepository = vehicleRepository;
+        _modelRepository = modelRepository;
+        _engineRepository = engineRepository;
+        _bodyRepository = bodyRepository;
+        _engineTypeRepository = engineTypeRepository;
     }
 
-    [HttpGet("brands")]
-    public async Task<IActionResult> GetBrandsAsync()
+    [HttpGet("{vin}")]
+    public async Task<IActionResult> GetByVinAsync(string vin)
     {
-        var resultList = await _brands.GetBrandsNamesAsync();
+        var vehicle = await _vehicleRepository
+            .FindByVinAsync(vin);
+        
+        if (vehicle is null)
+            return this.NotFound();
 
-        return this.Ok(resultList);
+        return this.Ok(vehicle);
     }
-    
-    [HttpPost("brands")]
+
+    [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] AddBrandRequestBody requestBody)
+        [FromBody] AddVehicleRequest request)
     {
-        var brand = await _brands.GetBrandAsync(
-            brandName: requestBody.Name);
-
-        if (brand != null)
-        {
-            return this.BadRequest("Такой бренд уже существует в базе");
-        }
-
-        brand = new Brand()
-        {
-            Name = requestBody.Name,
-            Models = new List<Types.Model>(),
-        };
-        
-        await _brands.AddAsync(brand);
-
-        return this.Ok(brand);
-    }
-    
-    [HttpGet("{brandName}")]
-    public async Task<IActionResult> GetModelsAsync(
-        string brandName)
-    {
-        var brand = await _brands.GetBrandAsync(brandName);
-
-        if (brand is null)
-        {
-            return this.NotFound();
-        }
-
-        return this.Ok(brand);
-    }
-    
-    [HttpGet("{brandName}/{modelName}")]
-    public async Task<IActionResult> GetModelDetailsAsync(
-        string brandName,
-        string modelName)
-    {
-        var model = await _models.GetByNameAsync(
-            brandName: brandName,
-            modelName: modelName);
-
+        var model = await _modelRepository.GetByIdAsync(request.ModelId);
         if (model is null)
-        {
-            return this.NotFound();
-        }
+            return this.BadRequest();
 
-        return this.Ok(model);
-    }
+        var body = await _bodyRepository.FindByIdAsync(request.BodyId);
+        if (body is null)
+            return this.BadRequest();
 
-    [HttpPost("{brandName}")]
-    public async Task<IActionResult> PostModelsAsync(
-        string brandName,
-        [FromBody] AddModelRequestBody requestBody)
-    {
-        var brand = await _brands.GetBrandAsync(brandName);
+        var engineType = await _engineTypeRepository.GetByIdAsync(request.EngineTypeId);
 
-        if (brand is null)
-        {
-            return this.NotFound();
-        }
-
-        var model = new Types.Model()
-        {
-            ModelName = requestBody.Name,
-            Brand = brand,
-        };
-
-        if (requestBody.EngineIds != null)
-        {
-            model.Engines = await _engines.GetEnginesAsync(requestBody.EngineIds);
-        }
+        if (engineType is null)
+            return this.BadRequest();
         
-        if (requestBody.BodyIds != null)
-        {
-            var bodies = await _bodies.GetBodiesAsync(requestBody.BodyIds);
-            model.Bodies =  bodies;
-        }
+        var engine = new Engine(
+            number: request.EngineNumber,
+            type: engineType,
+            horsePower: request.HorsePower,
+            volume: request.Volume);
+        
+        await _engineRepository.AddEngineAsync(engine);
 
-        await _brands.AddModelAsync(model);
+        var vehicle = new Vehicle(
+            model: model,
+            body: body,
+            engine: engine,
+            transmission: (Transmission)request.Transmission,
+            vin: request.Vin,
+            color: request.Color);
 
-        return this.Ok(model);
-    }
+        await _vehicleRepository.AddAsync(vehicle);
 
-    [HttpPost("model/{modelId}")]
-    public async Task<IActionResult> UpdateModelAsync(
-        int modelId,
-        [FromBody] UpdateModelRequestBody requestBody)
-    {
-        var model = await _models.GetByIdAsync(modelId);
-
-        if (model is null)
-        {
-            return this.NotFound();
-        }
-
-        if (requestBody.EngineIds != null)
-        {
-            model.Engines = await _engines.GetEnginesAsync(requestBody.EngineIds);
-        }
-
-        if (requestBody.BodyIds != null)
-        {
-            model.Bodies = await _bodies.GetBodiesAsync(requestBody.BodyIds);
-        }
-
-        await _models.UpdateAsync(model);
-
-        return this.Ok(model);
+        return this.Ok(vehicle);
     }
 }
