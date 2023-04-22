@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VehicleRegistration.WebApi.Repositories;
+using VehicleRegistration.WebApi.RequestModels;
 using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Controllers;
@@ -26,21 +27,21 @@ public class BodyController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] Body body)
+        [FromBody] AddBodyRequest request)
     {
-        try
+        var bodies = await _bodies.GetBodiesAsync();
+
+        if (bodies.Any(b => b.Name == request.Name))
         {
-            await _bodies.AddBodyAsync(body);
+            return this.BadRequest("Такой тип кузова уже есть в базе");
         }
-        catch (DbUpdateException)
+
+        var body = new Body()
         {
-            return this.BadRequest();
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+            Name = request.Name,
+        };
+
+        await _bodies.AddBodyAsync(body);
         
         return this.Ok(body);
     }

@@ -4,12 +4,10 @@ namespace VehicleRegistration.WebApi.Repositories;
 
 public interface IBrandRepository
 {
-    Task<List<string>> GetBrandsNamesAsync();
+    Task<List<Brand>> GetBrandsAsync();
 
     Task<Brand?> GetBrandAsync(
         string brandName);
-
-    Task<Brand?> FindByIdAsync(int id);
 
     Task AddAsync(
         Brand brand);

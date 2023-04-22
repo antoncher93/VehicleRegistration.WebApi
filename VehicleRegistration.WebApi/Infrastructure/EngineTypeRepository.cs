@@ -22,4 +22,10 @@ public class EngineTypeRepository : IEngineTypeRepository
     {
         return await _db.EngineTypes.FirstOrDefaultAsync(t => t.Id == id);
     }
+
+    public async Task AddAsync(EngineType engineType)
+    {
+        await _db.EngineTypes.AddAsync(engineType);
+        await _db.SaveChangesAsync();
+    }
 }

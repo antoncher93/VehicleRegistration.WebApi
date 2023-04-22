@@ -14,11 +14,10 @@ public class BrandRepository : IBrandRepository
         _db = db;
     }
 
-    public async Task<List<string>> GetBrandsNamesAsync()
+    public async Task<List<Brand>> GetBrandsAsync()
     {
-        var resultList = new List<string>();
+        var resultList = new List<Brand>();
         var brandsNames = await _db.Brands?
-            .Select(brand => brand.Name)
             .ToListAsync()!;
         
         resultList.AddRange(brandsNames);

@@ -41,6 +41,13 @@ public class ModelController : ControllerBase
     public async Task<IActionResult> PostAsync(
         [FromBody] AddModelRequest request)
     {
+        var models = await _modelRepository.GetModelsOfBrandAsync(request.BrandId);
+
+        if (models.Any(m => m.ModelName == request.Name))
+        {
+            return this.BadRequest("Такая модель уже есть в базе");
+        }
+        
         var model = new Model()
         {
             ModelName = request.Name,

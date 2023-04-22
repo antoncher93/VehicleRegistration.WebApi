@@ -52,9 +52,10 @@ public class RegistrationRepository : IRegistrationRepository
             .ToListAsync();
     }
 
-    public async Task<List<string>> GetAllRegNumbersAsync()
+    public async Task<List<string>> GetBusyRegNumbersAsync()
     {
         return await _db.Registrations
+            .Where(r => r.IsActive)
             .Select(r => r.RegNumber)
             .ToListAsync();
     }

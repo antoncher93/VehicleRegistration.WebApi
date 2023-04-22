@@ -17,15 +17,15 @@ public class BrandController : ControllerBase
         _brands = brands;
     }
 
-    [HttpGet]
+    [HttpGet("list")]
     public async Task<IActionResult> GetBrandsAsync()
     {
-        var resultList = await _brands.GetBrandsNamesAsync();
+        var resultList = await _brands.GetBrandsAsync();
 
         return this.Ok(resultList);
     }
     
-    [HttpPost("brands")]
+    [HttpPost]
     public async Task<IActionResult> PostAsync(
         [FromBody] AddBrandRequestBody requestBody)
     {
