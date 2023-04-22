@@ -10,7 +10,7 @@ public interface IRegistrationRepository
     Task<List<Registration>> FindRegistrationsByRegNumberAsync(
         string regNumber);
 
-    Task<List<string>> GetAllRegNumbersAsync();
+    Task<List<string>> GetBusyRegNumbersAsync();
     
     Task<Registration?> FindByIdAsync(
         int registrationId);

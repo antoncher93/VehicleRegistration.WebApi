@@ -54,9 +54,9 @@ public class RegistrationController : ControllerBase
         return this.Ok(registrations);
     }
 
-    [HttpPatch]
+    [HttpDelete("{registrationId}/deactivate")]
     public async Task<IActionResult> DeactivateAsync(
-        [FromBody] int registrationId)
+        int registrationId)
     {
         var registration = await _registrationRepository.FindByIdAsync(registrationId);
 
@@ -97,7 +97,7 @@ public class RegistrationController : ControllerBase
     private async Task<string> GetNextRegNumberAsync(
         int region)
     {
-        var busyNumbers = await _registrationRepository.GetAllRegNumbersAsync();
+        var busyNumbers = await _registrationRepository.GetBusyRegNumbersAsync();
         busyNumbers.Sort();
         var numberProvider = new RusRegNumberProvider();
         for (int i = 0; i < busyNumbers.Count; i++)
