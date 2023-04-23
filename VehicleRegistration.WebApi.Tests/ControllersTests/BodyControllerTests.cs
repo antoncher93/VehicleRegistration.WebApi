@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using VehicleRegistration.WebApi.RequestModels;
 using VehicleRegistration.WebApi.Types;
 using Xunit;
 
@@ -32,7 +33,10 @@ public class BodyControllerTests
 
         var body = Create.RandomBody();
 
-        await sut.BodyController.PostAsync(body);
+        await sut.BodyController.PostAsync(new AddBodyRequest()
+        {
+            Name = body.Name,
+        });
 
         var result = await sut.BodyController.GetAsync();
 

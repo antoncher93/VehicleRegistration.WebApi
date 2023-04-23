@@ -9,7 +9,11 @@ public static class SutFactory
     public static Sut Create()
     {
         var dbBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        var options = dbBuilder.UseSqlServer("Server=localhost,1433;Database=master;User Id=sa;Password=Pa23@!Ze7&;TrustServerCertificate=True;").Options;
+        
+        var options = dbBuilder
+            .UseSqlServer("Server=localhost,1433;Database=master;User Id=sa;Password=Pa23@!Ze7&;TrustServerCertificate=True;")
+            .Options;
+        
         var db = new ApplicationDbContext(options);
 
         var brands = new BrandRepository(db);

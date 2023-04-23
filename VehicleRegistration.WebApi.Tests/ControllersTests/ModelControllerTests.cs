@@ -16,13 +16,12 @@ public class ModelControllerTests
         sut.SetupBrand(brand);
         var models = Values.ListOf(() => Create.RandomModel(brand));
         sut.SetupModels(models);
-        var expectedList = models.Select(m => m.ModelName).ToList();
         var result = await sut.ModelController.GetModelsAsync(brand.Name);
         result
             .As<OkObjectResult>()
             .Value
             .Should()
-            .BeEquivalentTo(expectedList);
+            .BeEquivalentTo(models);
     }
 
     [Fact]

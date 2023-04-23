@@ -25,9 +25,9 @@ public class BrandControllerTests
         var brandResult = Assert.IsType<OkObjectResult>(actionResult);
 
         brandResult.Value
-            .As<IEnumerable<string>>()
+            .As<IEnumerable<Brand>>()
             .Should()
-            .Contain(brand.Name);
+            .Contain(brand);
     }
 
     [Fact]

@@ -77,6 +77,8 @@ public class VehicleControllerTests
                     .Excluding(m => m.BodyId)
                     .Excluding(m => m.EngineId)
                     .Excluding(m => m.ModelId)
-                    .Excluding(m => m.Engine.Id));
+                    .Excluding(m => m.Engine.Id)
+                    .Excluding(m => m.Engine.Vehicle)
+                    .Excluding(m => m.Engine.EngineTypeId));
     }
 }

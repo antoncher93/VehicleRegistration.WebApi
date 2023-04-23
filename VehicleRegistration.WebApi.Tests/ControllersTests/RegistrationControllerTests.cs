@@ -42,6 +42,7 @@ public class RegistrationControllerTests
                 expectation: expectedRegistration,
                 config: options => options
                     .Excluding(reg => reg.OwnerId)
+                    .Excluding(reg => reg.Id)
                     .Excluding(reg => reg.VehicleId));
     }
 
