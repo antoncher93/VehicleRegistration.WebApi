@@ -1,4 +1,4 @@
-﻿using VehicleRegistration.WebApi.Types;
+﻿using VehicleRegistration.WebApi.Models;
 
 namespace VehicleRegistration.WebApi.Repositories;
 

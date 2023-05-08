@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
-using VehicleRegistration.WebApi.RequestModels;
-using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Controllers;
 
@@ -39,20 +38,16 @@ public class ModelController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] AddModelRequest request)
+        [FromBody] Model model)
     {
-        var models = await _modelRepository.GetModelsOfBrandAsync(request.BrandId);
+        var models = await _modelRepository.GetModelsOfBrandAsync(model.BrandId);
 
-        if (models.Any(m => m.ModelName == request.Name))
+        var isSameModelExists = models.Any(m => m.ModelName == model.ModelName);
+        
+        if (isSameModelExists)
         {
             return this.BadRequest("Такая модель уже есть в базе");
         }
-        
-        var model = new Model()
-        {
-            ModelName = request.Name,
-            BrandId = request.BrandId,
-        };
 
         await _modelRepository.AddModelAsync(model);
 
