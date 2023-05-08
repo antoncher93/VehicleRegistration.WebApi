@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
-using VehicleRegistration.WebApi.RequestModels;
-using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Controllers;
 
@@ -27,21 +26,18 @@ public class BrandController : ControllerBase
     
     [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] AddBrandRequestBody requestBody)
+        [FromBody] Brand brand)
     {
-        var brand = await _brands.GetBrandAsync(
-            brandName: requestBody.Name);
+        var brands = await _brands.GetBrandsAsync();
 
-        if (brand != null)
+        // проверяем, есть ли такая марка в базе
+        var isSameBrandExists = brands.Any(b => b.Name == brand.Name);
+
+        if (isSameBrandExists)
         {
+            // возвращаем ошибку запроса, и говорим, что нельзя добавлять в базу 2 одинаковые марки
             return this.BadRequest("Такой бренд уже существует в базе");
         }
-
-        brand = new Brand()
-        {
-            Name = requestBody.Name,
-            Models = new List<Types.Model>(),
-        };
         
         await _brands.AddAsync(brand);
 

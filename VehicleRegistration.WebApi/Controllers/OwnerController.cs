@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
-using VehicleRegistration.WebApi.RequestModels;
-using VehicleRegistration.WebApi.Types;
 
 namespace VehicleRegistration.WebApi.Controllers;
 
@@ -18,12 +17,14 @@ public class OwnerController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetByFullName(
-        [FromQuery] GetOwnerByFullNameRequest request)
+        string firstName,
+        string lastName,
+        string middleName)
     {
         var owner = await _ownerRepository.FindByFullNameAsync(
-            firstName: request.FirstName,
-            lastName: request.LastName,
-            middleName: request.MiddleName);
+            firstName: firstName,
+            lastName: lastName,
+            middleName: middleName);
 
         if (owner is null)
         {
@@ -35,24 +36,22 @@ public class OwnerController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] AddOwnerRequest request)
+        [FromBody] Owner owner)
     {
-        var owner = await _ownerRepository
+        // Ищем собственника с такими же ФИО
+        var sameOwner = await _ownerRepository
             .FindByFullNameAsync(
-                firstName: request.FirstName,
-                lastName: request.LastName,
-                middleName: request.MiddleName);
+                firstName: owner.FirstName,
+                lastName: owner.LastName,
+                middleName: owner.MiddleName);
 
-        if (owner != null)
+        // если такой собственник уже есть
+        if (sameOwner != null)
         {
-            return this.BadRequest();
+            // возвращаем ошибку
+            return this.BadRequest("Такой собственник уже есть в базе");
         }
         
-        owner = new Owner(
-            firstName: request.FirstName,
-            lastName: request.LastName,
-            middleName: request.MiddleName);
-
         await _ownerRepository.AddAsync(owner);
 
         return this.Ok(owner);

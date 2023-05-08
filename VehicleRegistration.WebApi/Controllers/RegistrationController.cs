@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using VehicleRegistration.WebApi.Infrastructure;
+using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
-using VehicleRegistration.WebApi.RequestModels;
-using VehicleRegistration.WebApi.Types;
+using VehicleRegistration.WebApi.Tools;
 
 namespace VehicleRegistration.WebApi.Controllers;
 
@@ -15,9 +14,7 @@ public class RegistrationController : ControllerBase
     private readonly IOwnerRepository _ownerRepository;
 
     public RegistrationController(
-        IRegistrationRepository registrationRepository,
-        IVehicleRepository vehicleRepository,
-        IOwnerRepository ownerRepository)
+        IRegistrationRepository registrationRepository, IVehicleRepository vehicleRepository, IOwnerRepository ownerRepository)
     {
         _registrationRepository = registrationRepository;
         _vehicleRepository = vehicleRepository;
@@ -70,27 +67,11 @@ public class RegistrationController : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> PostAsync(
-        [FromBody] AddRegistrationRequest request)
+        [FromBody] Registration registration)
     {
-        var vehicle = await _vehicleRepository.FindByVinAsync(request.Vin);
-        
-        if(vehicle is null)
-            return this.BadRequest("Не удалось найти ТС с указанным VIN");
-
-        var owner = await _ownerRepository.FindByIdAsync(request.OwnerId);
-        if (owner is null)
-            return this.BadRequest("Не удалось найти указанного владельца");
-
-        var regNumber = await GetNextRegNumberAsync(request.Region);
-
-        var registration = new Registration(
-            owner: owner,
-            vehicle: vehicle,
-            regNumber: regNumber.ToUpper(),
-            isActive: true);
-
+        registration.RegNumber = await GetNextRegNumberAsync(77);
         await _registrationRepository.AddAsync(registration);
-
+        registration = await _registrationRepository.FindByIdAsync(registration.Id);
         return this.Ok(registration);
     }
 
