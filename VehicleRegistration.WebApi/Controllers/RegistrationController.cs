@@ -10,15 +10,11 @@ namespace VehicleRegistration.WebApi.Controllers;
 public class RegistrationController : ControllerBase
 {
     private readonly IRegistrationRepository _registrationRepository;
-    private readonly IVehicleRepository _vehicleRepository;
-    private readonly IOwnerRepository _ownerRepository;
 
     public RegistrationController(
-        IRegistrationRepository registrationRepository, IVehicleRepository vehicleRepository, IOwnerRepository ownerRepository)
+        IRegistrationRepository registrationRepository)
     {
         _registrationRepository = registrationRepository;
-        _vehicleRepository = vehicleRepository;
-        _ownerRepository = ownerRepository;
     }
 
     [HttpGet("{regNumber}/list")]
