@@ -16,15 +16,11 @@ public class OwnerController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetByFullName(
-        string firstName,
-        string lastName,
-        string middleName)
+    public async Task<IActionResult> GetAsync(
+        int passportSeries,
+        int passportNumber)
     {
-        var owner = await _ownerRepository.FindByFullNameAsync(
-            firstName: firstName,
-            lastName: lastName,
-            middleName: middleName);
+        var owner = await _ownerRepository.FindByPassportDataAsync(passportSeries, passportNumber);
 
         if (owner is null)
         {
@@ -40,10 +36,7 @@ public class OwnerController : ControllerBase
     {
         // Ищем собственника с такими же ФИО
         var sameOwner = await _ownerRepository
-            .FindByFullNameAsync(
-                firstName: owner.FirstName,
-                lastName: owner.LastName,
-                middleName: owner.MiddleName);
+            .FindByPassportDataAsync(owner.PassportSeries, owner.PassportNumber);
 
         // если такой собственник уже есть
         if (sameOwner != null)

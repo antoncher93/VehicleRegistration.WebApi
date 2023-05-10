@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VehicleRegistration.WebApi.DB;
 using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
 
-namespace VehicleRegistration.WebApi.Infrastructure;
+namespace VehicleRegistration.WebApi.DB;
 
 public class OwnerRepository : IOwnerRepository
 {
@@ -27,12 +26,11 @@ public class OwnerRepository : IOwnerRepository
                 owner => owner.Id == id);
     }
 
-    public async Task<Owner?> FindByFullNameAsync(string firstName, string lastName, string middleName)
+    public async Task<Owner?> FindByPassportDataAsync(int series, int number)
     {
         return await _db.Owners
             .FirstOrDefaultAsync(
-                owner => owner.FirstName == firstName
-                && owner.LastName == lastName
-                && owner.MiddleName == middleName);
+                owner => owner.PassportSeries == series
+                && owner.PassportNumber == number);
     }
 }
