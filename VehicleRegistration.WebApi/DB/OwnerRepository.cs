@@ -26,7 +26,7 @@ public class OwnerRepository : IOwnerRepository
                 owner => owner.Id == id);
     }
 
-    public async Task<Owner?> FindByPassportDataAsync(int series, int number)
+    public async Task<Owner?> FindByPassportDataAsync(string series, string number)
     {
         return await _db.Owners
             .FirstOrDefaultAsync(

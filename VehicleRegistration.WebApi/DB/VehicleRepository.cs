@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VehicleRegistration.WebApi.DB;
 using VehicleRegistration.WebApi.Models;
 using VehicleRegistration.WebApi.Repositories;
 
-namespace VehicleRegistration.WebApi.Infrastructure;
+namespace VehicleRegistration.WebApi.DB;
 
 public class VehicleRepository : IVehicleRepository
 {
@@ -30,5 +29,11 @@ public class VehicleRepository : IVehicleRepository
             .ThenInclude(model => model.Brand)
             .Include(vehicle => vehicle.Body)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task UpdateAsync(Vehicle vehicle)
+    {
+        _db.Vehicles.Update(vehicle);
+        await _db.SaveChangesAsync();
     }
 }

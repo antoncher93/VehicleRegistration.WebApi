@@ -7,4 +7,5 @@ public interface IVehicleRepository
     Task AddAsync(Vehicle vehicle);
 
     Task<Vehicle?> FindByVinAsync(string vin);
+    Task UpdateAsync(Vehicle vehicle);
 }
