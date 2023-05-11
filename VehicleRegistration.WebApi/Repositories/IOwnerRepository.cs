@@ -6,5 +6,5 @@ public interface IOwnerRepository
 {
     Task AddAsync(Owner owner);
 
-    Task<Owner?> FindByPassportDataAsync(int series, int number);
+    Task<Owner?> FindByPassportDataAsync(string series, string number);
 }

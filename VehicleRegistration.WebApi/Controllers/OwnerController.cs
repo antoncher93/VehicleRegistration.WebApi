@@ -17,8 +17,8 @@ public class OwnerController : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> GetAsync(
-        int passportSeries,
-        int passportNumber)
+        string passportSeries,
+        string passportNumber)
     {
         var owner = await _ownerRepository.FindByPassportDataAsync(passportSeries, passportNumber);
 
