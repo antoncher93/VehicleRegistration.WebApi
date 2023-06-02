@@ -28,7 +28,9 @@ public class BrandControllerTests
             new Brand() { Name = "Brand2" },
             new Brand() { Name = "Brand3" },
         };
-
+        
+        _brandRepository.SetupManyBrands(brands);
+        
         var result = await _brandController.GetBrandsAsync();
 
         result
